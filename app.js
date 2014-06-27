@@ -1,5 +1,16 @@
+var extensionInstalled = false;
+
 document.getElementById('start').addEventListener('click', function() {
   // send screen-sharer request to content-script
+  if (!extensionInstalled){
+    var message = 'Please install the extension:\n' +
+                  '1. Go to chrome://extensions\n' +
+                  '2. Check: "Enable Developer mode"\n' +
+                  '3. Click: "Load the unpacked extension..."\n' +
+                  '4. Choose "extension" folder from the repository\n' +
+                  '5. Reload this page';
+    alert(message);
+  }
   window.postMessage({ type: 'SS_UI_REQUEST', text: 'start' }, '*');
 });
 
@@ -9,7 +20,7 @@ window.addEventListener('message', function (event) {
 
   // content-script will send a 'SS_PING' msg if extension is installed
   if (event.data.type && (event.data.type === 'SS_PING')) {
-    console.log('extension seems to be installed');
+    extensionInstalled = true;
   }
 
   // user chose a stream

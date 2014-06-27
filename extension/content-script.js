@@ -10,7 +10,6 @@
 var port = chrome.runtime.connect(chrome.runtime.id);
 
 port.onMessage.addListener(function(msg) {
-	console.log('content-script received: ' + msg);
 	window.postMessage(msg, '*');
 });
 
