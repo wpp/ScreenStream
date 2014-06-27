@@ -23,6 +23,8 @@ For the demo to work, you need to install the extension:
 
 If everything worked you should see: <img src="images/2.png">
 
+NOTE: your ID will differ, that's fine though.
+
 # Explanation
 
 The `index.html` file contains a very simple "Share screen" button, an empty `<video>` tag
