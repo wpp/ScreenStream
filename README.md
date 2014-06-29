@@ -1,4 +1,6 @@
-Here is how you get access to the users screen with a chrome extension.
+A simple demo on how you get access to a users screen with Chromes `desktopCapture` API.
+
+<img src="images/3.gif">
 
 # Setup
 
