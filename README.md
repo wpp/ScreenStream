@@ -15,8 +15,8 @@ your users to `chrome://flags`)
     - [Glueing it together](#glue)
 - [Credits](#credits)
 
-# Setup
 <a name="setup"></a>
+# Setup
 
 For the Demo to work, you will need to do 2 things:
 
@@ -39,18 +39,20 @@ You should see: <img src="images/2.png">
 
 NOTE: your ID will differ, that's fine though.
 
-# How does it work?
 <a name="how"></a>
+# How does it work?
 
-## Application (our web-app)
 <a name="app"></a>
+## Application (our web-app)
+
 
 The `index.html` file contains a "Share screen" button, an empty `<video>` tag
 and loads some javascript (`app.js`). Think of these two files as our
 "application".
 
-## Extension
 <a name="extension"></a>
+## Extension
+
 
 The extension consists of 4 files:
 
@@ -90,8 +92,9 @@ That's why we have the content-script.
 The content-script does not have access to variables or functions defined on our
 page, but it **has access to the DOM**.
 
-## Glueing it together
 <a name="glue"></a>
+## Glueing it together
+
 
 In order to call `navigator.webkitGetUserMedia` in **app.js**, we need a
 chromeMediaSourceId which we get from our **background page**.
@@ -175,8 +178,8 @@ where we finally call `navigator.webkitGetUserMedia` with the `streamID`
 *Please note that the code examples in this README are edited for brevity,
 complete code is in the corresponding files.*
 
-# Credits
 <a name="credits"></a>
+# Credits
 
 Thanks to the guys and gals at [&yet](http://andyet.com/) for [talky.io]()
 
