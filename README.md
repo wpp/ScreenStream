@@ -1,4 +1,4 @@
-A simple demo on how you get access to a users screen with Chrome's `desktopCapture` API in your application.
+How to get create a screen stream with Chrome's `desktopCapture` API in your web-application.
 
 <img src="images/3.gif">
 
