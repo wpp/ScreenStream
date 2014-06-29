@@ -2,7 +2,7 @@
 `desktopCapture` API in your web-application.*
 
 (If you're writing a WebRTC app with screen sharing, and want to avoid sending
-your users to `chrome://flags`)
+users to `chrome://flags`)
 
 <img src="images/3.gif">
 
@@ -20,7 +20,7 @@ your users to `chrome://flags`)
 
 For the Demo to work, you will need to do 2 things:
 
-## 1. Serve the `index.html` file over https.
+## 1. Serve `index.html` over https.
 
     $ cd ~/wherever/you/cloned/the/repo/screenstream
     $ ruby server
@@ -45,14 +45,12 @@ NOTE: your ID will differ, that's fine though.
 <a name="app"></a>
 ## Application (our web-app)
 
-
 The `index.html` file contains a "Share screen" button, an empty `<video>` tag
 and loads some javascript (`app.js`). Think of these two files as our
 "application".
 
 <a name="extension"></a>
 ## Extension
-
 
 The extension consists of 4 files:
 
