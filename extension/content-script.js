@@ -2,9 +2,10 @@
 //   - 'content_script' and execution env are isolated from each other
 //   - In order to communicate we use the DOM (window.postMessage)
 //
-// application.js      content-script.js         background.js
-//                       window                      port
-// window.postMessage() <------> port.postMessage() <----> port.onMessage.addListener()
+// app.js            |        |content-script.js|      |background.js
+//                   |------->|                 |----->|
+//                   | window |                 | port |
+// window.postMessage|<------ |port.postMessage |<-----|port.onMessage.addListener
 //
 
 var port = chrome.runtime.connect(chrome.runtime.id);
