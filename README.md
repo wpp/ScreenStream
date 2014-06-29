@@ -1,5 +1,5 @@
-*A simple demo for creating a screen stream with Chrome's `desktopCapture` API in
-your web-application.*
+*A simple demo on how to write a Chrome extension to access the `desktopCapture`
+API in your web-application.* (Avoid `chrome://flags`!)
 
 <img src="images/3.gif">
 
