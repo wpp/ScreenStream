@@ -1,13 +1,26 @@
-*A simple demo on how to write a Chrome extension to access the `desktopCapture`
-API in your web-application.* (Avoid `chrome://flags`!)
+*This demo app shows you how to use a Chrome extension to access the
+`desktopCapture` API in your web-application.*
+
+(If you're writing a WebRTC app with screen sharing, and want to avoid sending
+your users to `chrome://flags`)
 
 <img src="images/3.gif">
 
+## Index
+
+- [Setup](#setup)
+- [How does it work?](#how)
+    - [Application (our web-app)](#app)
+    - [Extension](#extension)
+    - [Glueing it together](#glue)
+- [Credits](#credits)
+
 # Setup
+<a name="setup"></a>
 
-For the Demo to work, you will need to:
+For the Demo to work, you will need to do 2 things:
 
-## Serve the `index.html` file over https.
+## 1. Serve the `index.html` file over https.
 
     $ cd ~/wherever/you/cloned/the/repo/screenstream
     $ ruby server
@@ -15,7 +28,7 @@ For the Demo to work, you will need to:
 Open Chrome and go to [https://localhost:8000]().
 You should see: <img src="images/1.png">
 
-## Install the extension:
+## 2. Install the extension:
 
 1. Go to [chrome://extensions]()
 2. Check "Developer mode"
@@ -26,17 +39,20 @@ You should see: <img src="images/2.png">
 
 NOTE: your ID will differ, that's fine though.
 
-# Explanation
+# How does it work?
+<a name="how"></a>
 
 ## Application (our web-app)
+<a name="app"></a>
 
 The `index.html` file contains a "Share screen" button, an empty `<video>` tag
 and loads some javascript (`app.js`). Think of these two files as our
 "application".
 
 ## Extension
+<a name="extension"></a>
 
-The extension on the other hand consists of 4 files:
+The extension consists of 4 files:
 
 1. background.js
 2. content-script.js
@@ -75,17 +91,18 @@ The content-script does not have access to variables or functions defined on our
 page, but it **has access to the DOM**.
 
 ## Glueing it together
+<a name="glue"></a>
 
 In order to call `navigator.webkitGetUserMedia` in **app.js**, we need a
 chromeMediaSourceId which we get from our **background page**.
 
-We have to pass messages through the chain below:
+We have to pass messages through the chain below (left to right):
 
-    app.js            |        |content-script.js |      |background.js
-    ------------------|        |------------------|      |-----------------
-    window.postMessage|------->|port.postMessage  |----->| port.onMessage
-                      | window |                  | port |
-    webkitGetUserMedia|<------ |window.postMessage|<-----| port.postMessage
+    app.js            |        |content-script.js |      |background.js       | desktopCapture API
+    ------------------|        |------------------|      |--------------------|
+    window.postMessage|------->|port.postMessage  |----->|port.onMessage------+
+                      | window |                  | port |                 get|*streamID*
+    webkitGetUserMedia|<------ |window.postMessage|<-----|port.postMessage<---+
 
 Lets run through the chain:
 
@@ -94,7 +111,7 @@ because...
 
     window.postMessage({ type: 'SS_UI_REQUEST', text: 'start' }, '*');
 
-the **content-script has access to the DOM**
+the **content-script has access to the DOM.**
 
     window.addEventListener('message', function(event) {
         if (event.data.type && ((event.data.type === 'SS_UI_REQUEST'))) {
@@ -102,18 +119,19 @@ the **content-script has access to the DOM**
         }
     }, false);
 
-the can in turn **talk to the background page**
+the content-script can also **talk to the background page**
 
     var port = chrome.runtime.connect(chrome.runtime.id);
 
-the **background page is listening on that port**
+the **background page is listening on that port**,
 
     port.onMessage.addListener(function (msg) {
       if(msg.type === 'SS_UI_REQUEST') {
         requestScreenSharing(port, msg);
       }
 
-gets access to the stream, and **sends a message containing the chromeMediaSourceId (`streamID) back to the port** (the content-script)
+gets access to the stream, and **sends a message containing the
+chromeMediaSourceId (`streamID`) back to the port** (the content-script)
 
     function requestScreenSharing(port, msg) {
       desktopMediaRequestId =
@@ -131,7 +149,7 @@ the content-script posts it back to app.js
         window.postMessage(msg, '*');
     });
 
-where we finally call `navigator.webkitGetUserMedia`
+where we finally call `navigator.webkitGetUserMedia` with the `streamID`
 
     if (event.data.type && (event.data.type === 'SS_DIALOG_SUCCESS')) {
       startScreenStreamFrom(event.data.streamId);
@@ -155,9 +173,10 @@ where we finally call `navigator.webkitGetUserMedia`
       }
 
 *Please note that the code examples in this README are edited for brevity,
-complete code is the corresponding files.*
+complete code is in the corresponding files.*
 
 # Credits
+<a name="credits"></a>
 
 Thanks to the guys and gals at [&yet](http://andyet.com/) for [talky.io]()
 
