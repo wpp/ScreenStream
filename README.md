@@ -1,4 +1,4 @@
-A simple demo on how you get access to a users screen with Chromes `desktopCapture` API.
+A simple demo on how you get access to a users screen with Chrome's `desktopCapture` API in your application.
 
 <img src="images/3.gif">
 
@@ -73,10 +73,10 @@ Our mission:
 
 We need to get a **streamId from the background page**, to call `navigator.webkitGetUserMedia` in **app.js with that streamId**. To accomplish that mission we have to pass messages through the chain below:
 
-    // app.js            |        |content-script.js|      |background.js
-    //                   |------->|                 |----->|
-    //                   | window |                 | port |
-    // window.postMessage|<------ |port.postMessage |<-----|port.onMessage.addListener
+    // app.js            |        |content-script.js |      |background.js
+    // window.postMessage|------->|port.postMessage  |----->| port.onMessage
+    //                   | window |                  | port |
+    // webkitGetUserMedia|<------ |window.postMessage|<-----| port.postMessage
 
 Lets run through the chain:
 
