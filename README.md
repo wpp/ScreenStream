@@ -5,26 +5,24 @@ API in your web-application.* (Avoid `chrome://flags`!)
 
 # Setup
 
-## Server
+For the Demo to work, you will need to:
 
-You will need to serve the `index.html` file over https.
+## Serve the `index.html` file over https.
 
     $ cd ~/wherever/you/cloned/the/repo/screenstream
     $ ruby server
 
 Open Chrome and go to [https://localhost:8000]().
-If everything worked you should see: <img src="images/1.png">
+You should see: <img src="images/1.png">
 
-## Extension
+## Install the extension:
 
-For the demo to work, you need to install the extension:
-
-1. Go to [chrome://extensions/]()
+1. Go to [chrome://extensions]()
 2. Check "Developer mode"
 3. Click "Load unpacked extension..."
 4. In the dialog choose the `extension` folder from the repository
 
-If everything worked you should see: <img src="images/2.png">
+You should see: <img src="images/2.png">
 
 NOTE: your ID will differ, that's fine though.
 
@@ -78,19 +76,21 @@ page, but it **has access to the DOM**.
 
 ## Glueing it together
 
-We need to get a `streamId` **from the background page**, to call
-`navigator.webkitGetUserMedia` in **app.js with that streamId**. To accomplish
-that mission we have to pass messages through the chain below:
+In order to call `navigator.webkitGetUserMedia` in **app.js**, we need a
+chromeMediaSourceId which we get from our **background page**.
 
-    // app.js            |        |content-script.js |      |background.js
-    // window.postMessage|------->|port.postMessage  |----->| port.onMessage
-    //                   | window |                  | port |
-    // webkitGetUserMedia|<------ |window.postMessage|<-----| port.postMessage
+We have to pass messages through the chain below:
+
+    app.js            |        |content-script.js |      |background.js
+    ------------------|        |------------------|      |-----------------
+    window.postMessage|------->|port.postMessage  |----->| port.onMessage
+                      | window |                  | port |
+    webkitGetUserMedia|<------ |window.postMessage|<-----| port.postMessage
 
 Lets run through the chain:
 
-When the user clicks on "Share Screen", we post a message on the **window**
-object, because...
+When the user clicks on "Share Screen", we post a message to **window**,
+because...
 
     window.postMessage({ type: 'SS_UI_REQUEST', text: 'start' }, '*');
 
@@ -102,30 +102,25 @@ the **content-script has access to the DOM**
         }
     }, false);
 
-the **content-script can also talk to the background page** via:
+the can in turn **talk to the background page**
 
     var port = chrome.runtime.connect(chrome.runtime.id);
 
-the **background page listens on that same port**, for the message:
+the **background page is listening on that port**
 
     port.onMessage.addListener(function (msg) {
       if(msg.type === 'SS_UI_REQUEST') {
         requestScreenSharing(port, msg);
       }
 
-and finally gets access to the stream, and **sends a message back to the port
-and to the content-script**
+gets access to the stream, and **sends a message containing the chromeMediaSourceId (`streamID) back to the port** (the content-script)
 
     function requestScreenSharing(port, msg) {
       desktopMediaRequestId =
       chrome.desktopCapture.chooseDesktopMedia(data_sources, port.sender.tab,
       function (streamId) {
-        if (streamId) {
-          msg.type = 'SS_DIALOG_SUCCESS';
-          msg.streamId = streamId;
-        } else {
-          msg.type = 'SS_DIALOG_CANCEL';
-        }
+        msg.type = 'SS_DIALOG_SUCCESS';
+        msg.streamId = streamId;
         port.postMessage(msg);
       });
     }
