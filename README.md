@@ -192,3 +192,7 @@ Stopel](stackoverflow.com/questions/14267010/) for:
 
     openssl genrsa 2048 > private.pem
     openssl req -x509 -new -key private.pem -out public.pem
+
+# License
+
+[MIT](http://opensource.org/licenses/MIT)
