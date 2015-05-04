@@ -19,6 +19,7 @@ users to `chrome://flags`)
     - [Application (our web-app)](#app)
     - [Extension](#extension)
     - [Glueing it together](#glue)
+- [Avoiding a reload after installation](#reload)
 - [Credits](#credits)
 
 <a name="setup"></a>
@@ -181,6 +182,24 @@ where we finally call `navigator.webkitGetUserMedia` with the `streamID`
 
 *Please note that the code examples in this README are edited for brevity,
 complete code is in the corresponding files.*
+
+<a name="reload"></a>
+# Avoiding a reload after installation
+
+*This part was inspired by
+[fippo from &yet](https://blog.andyet.com/2015/03/30/talky-first-time-ux-matters).*
+
+When the extension is installed, the content-script will not be injected automatically by Chrome.
+The good news is that `background.js` will be exectued and we can use it to manually inject the
+`content-script.js` in our open pages (tabs):
+
+The relevant code can be found in `background.js` and looks something like:
+
+    chrome.tabs.executeScript(currentTab.id, { file: 'js/content-script.js' }, function() {
+      console.log('Injected content-script.');
+    });
+
+**Please note: For this to work, you have to adjust `manifest.json` by adding `"tabs"` to the permissions section.**
 
 <a name="credits"></a>
 # Credits

@@ -37,3 +37,27 @@ function cancelScreenSharing(msg) {
      chrome.desktopCapture.cancelChooseDesktopMedia(desktopMediaRequestId);
   }
 }
+
+// Avoiding a reload
+chrome.windows.getAll({
+  populate: true
+}, function (windows) {
+  var details = { file: 'js/content-script.js' },
+      currentWindow;
+
+  for(var i = 0; i < windows.length; i++ ) {
+    currentWindow = windows[i];
+    var currentTab;
+
+    for(var j = 0; j < currentWindow.tabs.length; j++ ) {
+      currentTab = currentWindow.tabs[j];
+      // Skip chrome:// pages
+      if(!currentTab.url.match(/(chrome):\/\//gi)) {
+        // https://developer.chrome.com/extensions/tabs#method-executeScript
+        chrome.tabs.executeScript(currentTab.id, details, function() {
+          console.log('Injected content-script.');
+        });
+      }
+    }
+  }
+});
