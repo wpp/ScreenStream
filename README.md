@@ -29,7 +29,7 @@ For the Demo to work, you will need to do 2 things:
 ## 1. Serve `index.html` over https.
 
     $ cd ~/wherever/you/cloned/the/repo/screenstream
-    $ ruby server
+    $ ruby server.rb
 
 Open Chrome and go to [https://localhost:8000]().
 You should see: <img src="images/1.png">
