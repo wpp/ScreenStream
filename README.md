@@ -207,7 +207,7 @@ The relevant code can be found in `background.js` and looks something like:
 Thanks to the guys and gals at [&yet](http://andyet.com/) for [talky.io]()
 
 Thanks to [stackoverflow user Dima
-Stopel](stackoverflow.com/questions/14267010/) for:
+Stopel](http://stackoverflow.com/questions/14267010/) for:
 
     openssl genrsa 2048 > private.pem
     openssl req -x509 -new -key private.pem -out public.pem
