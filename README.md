@@ -35,6 +35,10 @@ For the Demo to work, you will need to do 2 things:
 Open Chrome and go to [https://localhost:8000]().
 You should see: <img src="images/1.png">
 
+NOTE: If you're wondering why this is necessary have a look
+[here](http://stackoverflow.com/questions/13723699/chrome-getusermedia-not-requesting-permission-locally)
+and [here](https://github.com/wpp/ScreenStream/issues/3).
+
 ## 2. Install the extension:
 
 1. Go to [chrome://extensions]()
