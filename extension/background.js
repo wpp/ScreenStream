@@ -3,11 +3,11 @@ var data_sources = ['screen', 'window'],
 
 chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function (msg) {
-    if(msg.type === 'SS_UI_REQUEST') {
+    if (msg.type === 'SS_UI_REQUEST') {
       requestScreenSharing(port, msg);
     }
 
-    if(msg.type === 'SS_UI_CANCEL') {
+    if (msg.type === 'SS_UI_CANCEL') {
       cancelScreenSharing(msg);
     }
   });
@@ -19,7 +19,9 @@ function requestScreenSharing(port, msg) {
   //  - 'data_sources' Set of sources that should be shown to the user.
   //  - 'targetTab' Tab for which the stream is created.
   //  - 'streamId' String that can be passed to getUserMedia() API
-  desktopMediaRequestId = chrome.desktopCapture.chooseDesktopMedia(data_sources, port.sender.tab, function(streamId) {
+  var tab = port.sender.tab;
+  tab.url = msg.url;
+  desktopMediaRequestId = chrome.desktopCapture.chooseDesktopMedia(data_sources, tab, function(streamId) {
     if (streamId) {
       msg.type = 'SS_DIALOG_SUCCESS';
       msg.streamId = streamId;
@@ -45,14 +47,14 @@ chrome.windows.getAll({
   var details = { file: 'js/content-script.js' },
       currentWindow;
 
-  for(var i = 0; i < windows.length; i++ ) {
+  for (var i = 0; i < windows.length; i++ ) {
     currentWindow = windows[i];
     var currentTab;
 
-    for(var j = 0; j < currentWindow.tabs.length; j++ ) {
+    for (var j = 0; j < currentWindow.tabs.length; j++ ) {
       currentTab = currentWindow.tabs[j];
       // Skip chrome:// pages
-      if(!currentTab.url.match(/(chrome):\/\//gi)) {
+      if (!currentTab.url.match(/(chrome):\/\//gi)) {
         // https://developer.chrome.com/extensions/tabs#method-executeScript
         chrome.tabs.executeScript(currentTab.id, details, function() {
           console.log('Injected content-script.');

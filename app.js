@@ -11,7 +11,7 @@ document.getElementById('start').addEventListener('click', function() {
                   '5. Reload this page';
     alert(message);
   }
-  window.postMessage({ type: 'SS_UI_REQUEST', text: 'start' }, '*');
+  window.postMessage({ type: 'SS_UI_REQUEST', text: 'start', url: location.origin }, '*');
 });
 
 // listen for messages from the content-script
