@@ -44,7 +44,7 @@ function cancelScreenSharing(msg) {
 chrome.windows.getAll({
   populate: true
 }, function (windows) {
-  var details = { file: 'js/content-script.js' },
+  var details = { file: 'js/content-script.js', allFrames: true },
       currentWindow;
 
   for (var i = 0; i < windows.length; i++ ) {
