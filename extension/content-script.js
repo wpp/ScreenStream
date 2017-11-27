@@ -7,22 +7,32 @@
 //                   | window |                  | port |
 // webkitGetUserMedia|<------ |window.postMessage|<-----| port.postMessage
 //
+window.contentScriptHasRun = false;
+
 (function() {
-  if (window.contentScriptHasRun) return;
+  // prevent the content script from running multiple times
+  if (window.contentScriptHasRun) {
+    return;
+  }
+
   window.contentScriptHasRun = true;
 
-  var port = chrome.runtime.connect(chrome.runtime.id);
-
-  port.onMessage.addListener(function(msg) {
+  const port = chrome.runtime.connect(chrome.runtime.id);
+  port.onMessage.addListener((msg) => {
   	window.postMessage(msg, '*');
   });
 
   window.addEventListener('message', function(event) {
-  	// We only accept messages from ourselves
-  	if (event.source != window) return;
+  	// Only accept messages from ourselves
+  	if (event.source !== window) {
+      return;
+    }
+    // Only accept events with a data type
+    if (!event.data.type) {
+      return ;
+    }
 
-  	if (event.data.type && ((event.data.type === 'SS_UI_REQUEST') ||
-  							(event.data.type === 'SS_UI_CANCEL'))) {
+  	if (['SS_UI_REQUEST', 'SS_UI_CANCEL'].includes(event.data.type)) {
   		port.postMessage(event.data);
   	}
   }, false);

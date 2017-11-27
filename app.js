@@ -1,9 +1,9 @@
-var extensionInstalled = false;
+let extensionInstalled = false;
 
-document.getElementById('start').addEventListener('click', function() {
+document.getElementById('start').addEventListener('click', () => {
   // send screen-sharer request to content-script
-  if (!extensionInstalled){
-    var message = 'Please install the extension:\n' +
+  if (!extensionInstalled) {
+    const message = 'Please install the extension:\n' +
                   '1. Go to chrome://extensions\n' +
                   '2. Check: "Enable Developer mode"\n' +
                   '3. Click: "Load the unpacked extension..."\n' +
@@ -11,12 +11,15 @@ document.getElementById('start').addEventListener('click', function() {
                   '5. Reload this page';
     alert(message);
   }
-  window.postMessage({ type: 'SS_UI_REQUEST', text: 'start', url: location.origin }, '*');
+  window.postMessage({ type: 'SS_UI_REQUEST', text: 'start' }, '*');
 });
 
 // listen for messages from the content-script
-window.addEventListener('message', function (event) {
-  if (event.origin != window.location.origin) return;
+window.addEventListener('message', (event) => {
+  // discard foreign events
+  if (event.origin !== window.location.origin) {
+    return;
+  }
 
   // content-script will send a 'SS_PING' msg if extension is installed
   if (event.data.type && (event.data.type === 'SS_PING')) {
@@ -35,7 +38,7 @@ window.addEventListener('message', function (event) {
 });
 
 function startScreenStreamFrom(streamId) {
-  navigator.webkitGetUserMedia({
+  navigator.mediaDevices.getUserMedia({
     audio: false,
     video: {
       mandatory: {
@@ -45,15 +48,10 @@ function startScreenStreamFrom(streamId) {
         maxHeight: window.screen.height
       }
     }
-  },
-  // successCallback
-  function(screenStream) {
+  })
+  .then((stream) => {
     videoElement = document.getElementById('video');
-    videoElement.src = URL.createObjectURL(screenStream);
-    videoElement.play();
-  },
-  // errorCallback
-  function(err) {
-    console.log('getUserMedia failed!: ' + err);
-  });
+    videoElement.srcObject = stream;
+  })
+  .catch(console.error);
 }
