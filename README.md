@@ -105,8 +105,8 @@ page, but it **has access to the DOM**.
 ## Glueing it together
 
 
-In order to call `navigator.webkitGetUserMedia` in **app.js**, we need a
-chromeMediaSourceId which we get from our **background page**.
+In order to call `navigator.mediaDevices.getUserMedia` in **app.js**, we need a
+`chromeMediaSourceId` which we get from our **background page**.
 
 We have to pass messages through the chain below (left to right):
 
@@ -114,7 +114,7 @@ We have to pass messages through the chain below (left to right):
     ------------------|        |------------------|      |--------------------|
     window.postMessage|------->|port.postMessage  |----->|port.onMessage------+
                       | window |                  | port |                 get|*streamID*
-    webkitGetUserMedia|<------ |window.postMessage|<-----|port.postMessage<---+
+    getUserMedia      |<------ |window.postMessage|<-----|port.postMessage<---+
 
 Lets run through the chain:
 
@@ -161,14 +161,14 @@ the content-script posts it back to app.js
         window.postMessage(msg, '*');
     });
 
-where we finally call `navigator.webkitGetUserMedia` with the `streamID`
+where we finally call `navigator.mediaDevices.getUserMedia` with the `streamID`
 
     if (event.data.type && (event.data.type === 'SS_DIALOG_SUCCESS')) {
       startScreenStreamFrom(event.data.streamId);
     }
 
     function startScreenStreamFrom(streamId) {
-      navigator.webkitGetUserMedia({
+      navigator.mediaDevices.getUserMedia({
         video: {
           mandatory: {
             chromeMediaSource: 'desktop',

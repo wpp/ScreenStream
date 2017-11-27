@@ -5,7 +5,7 @@
 // app.js            |        |content-script.js |      |background.js
 // window.postMessage|------->|port.postMessage  |----->| port.onMessage
 //                   | window |                  | port |
-// webkitGetUserMedia|<------ |window.postMessage|<-----| port.postMessage
+// getUserMedia      |<------ |window.postMessage|<-----| port.postMessage
 //
 window.contentScriptHasRun = false;
 
