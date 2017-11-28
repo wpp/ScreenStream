@@ -22,7 +22,7 @@ window.contentScriptHasRun = false;
   	window.postMessage(msg, '*');
   });
 
-  window.addEventListener('message', function(event) {
+  window.addEventListener('message', (event) => {
   	// Only accept messages from ourselves
   	if (event.source !== window) {
       return;

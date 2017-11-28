@@ -17,7 +17,9 @@ function requestScreenSharing(port, msg) {
   //  - 'data_sources' Set of sources that should be shown to the user.
   //  - 'targetTab' Tab for which the stream is created.
   //  - 'streamId' String that can be passed to getUserMedia() API
-  const sources = ['screen', 'window'];
+  // Also available:
+  //  ['screen', 'window', 'tab', 'audio']
+  const sources = ['screen', 'window', 'tab', 'audio'];
   const tab = port.sender.tab;
 
   desktopMediaRequestId = chrome.desktopCapture.chooseDesktopMedia(sources, port.sender.tab,
@@ -55,7 +57,7 @@ chrome.windows.getAll({ populate: true }, (windows) => {
     // https://developer.chrome.com/extensions/tabs#method-executeScript
     // Would be nice to skip non authorized pages too, to avoid errors.
     chrome.tabs.executeScript(tab.id, details, () => {
-      console.log('Injected content-script in: ', tab);
+      console.log('After injection in tab: ', tab);
     });
   });
 });
