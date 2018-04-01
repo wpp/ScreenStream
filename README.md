@@ -25,21 +25,7 @@ users to `chrome://flags`)
 <a name="setup"></a>
 # Setup
 
-For the Demo to work, you will need to do 2 things:
-
-## 1. Serve `index.html` over https.
-
-    $ cd ~/wherever/you/cloned/the/repo/screenstream
-    $ ruby server.rb
-
-Open Chrome and go to [https://localhost:8000]().
-You should see: <img src="images/1.png">
-
-NOTE: If you're wondering why this is necessary have a look
-[here](http://stackoverflow.com/questions/13723699/chrome-getusermedia-not-requesting-permission-locally)
-and [here](https://github.com/wpp/ScreenStream/issues/3).
-
-## 2. Install the extension:
+For the Demo to work, you will need to install the extension
 
 1. Go to [chrome://extensions]()
 2. Check "Developer mode"
@@ -79,8 +65,7 @@ API](https://developer.chrome.com/extensions/desktopCapture). We get access to
 this API when we ask for permission in `manifest.json`:
 
     "permissions": [
-      "desktopCapture",
-      "https://localhost:8000/*"
+      "desktopCapture"
     ]
 
 The background page ("background.js" - chrome generates the related html for us)

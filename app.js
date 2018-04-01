@@ -16,10 +16,10 @@ document.getElementById('start').addEventListener('click', () => {
 
 // listen for messages from the content-script
 window.addEventListener('message', (event) => {
-  // discard foreign events
-  if (event.origin !== window.location.origin) {
-    return;
-  }
+  // NOTE: you should discard foreign events
+  // if (event.origin !== window.location.origin) {
+  //   return;
+  // }
 
   // content-script will send a 'SS_PING' msg if extension is installed
   if (event.data.type && (event.data.type === 'SS_PING')) {
