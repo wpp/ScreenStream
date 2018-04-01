@@ -46,7 +46,7 @@ function flatten(arr) {
 
 // This avoids a reload after an installation
 chrome.windows.getAll({ populate: true }, (windows) => {
-  const details = { file: 'js/content-script.js', allFrames: true };
+  const details = { file: 'content-script.js', allFrames: true };
 
   flatten(windows.map(w => w.tabs)).forEach((tab) => {
     // Skip chrome:// pages
