@@ -58,8 +58,18 @@ chrome.windows.getAll({ populate: true }, windows => {
     }
 
     // https://developer.chrome.com/extensions/tabs#method-executeScript
-    // Would be nice to skip non authorized pages too, to avoid errors.
+    // Unfortunately I don't know how to skip non authorized pages, and
+    // executeScript doesn't have an error callback.
     chrome.tabs.executeScript(tab.id, details, () => {
+      const { runtime: { lastError } } = chrome;
+
+      if (
+        lastError &&
+        !lastError.message.match(/cannot access contents of url/i)
+      ) {
+        console.error(lastError);
+      }
+
       console.log('After injection in tab: ', tab);
     });
   });
