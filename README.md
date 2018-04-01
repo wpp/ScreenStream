@@ -110,7 +110,7 @@ because...
 
 the **content-script has access to the DOM.**
 
-    window.addEventListener('message', function(event) {
+    window.addEventListener('message', event => {
         if (event.data.type && ((event.data.type === 'SS_UI_REQUEST'))) {
             port.postMessage(event.data);
         }
@@ -142,7 +142,7 @@ chromeMediaSourceId (`streamID`) back to the port** (the content-script)
 
 the content-script posts it back to app.js
 
-    port.onMessage.addListener(function(msg) {
+    port.onMessage.addListener(msg => {
         window.postMessage(msg, '*');
     });
 
@@ -184,7 +184,7 @@ The good news is that `background.js` will be exectued and we can use it to manu
 
 The relevant code can be found in `background.js` and looks something like:
 
-    chrome.tabs.executeScript(currentTab.id, { file: 'js/content-script.js' }, function() {
+    chrome.tabs.executeScript(currentTab.id, { file: 'js/content-script.js' }, () => {
       console.log('Injected content-script.');
     });
 
