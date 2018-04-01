@@ -1,7 +1,7 @@
 let desktopMediaRequestId = '';
 
-chrome.runtime.onConnect.addListener((port) => {
-  port.onMessage.addListener((msg) => {
+chrome.runtime.onConnect.addListener(port => {
+  port.onMessage.addListener(msg => {
     if (msg.type === 'SS_UI_REQUEST') {
       requestScreenSharing(port, msg);
     }
@@ -22,8 +22,10 @@ function requestScreenSharing(port, msg) {
   const sources = ['screen', 'window', 'tab', 'audio'];
   const tab = port.sender.tab;
 
-  desktopMediaRequestId = chrome.desktopCapture.chooseDesktopMedia(sources, port.sender.tab,
-    (streamId) => {
+  desktopMediaRequestId = chrome.desktopCapture.chooseDesktopMedia(
+    sources,
+    port.sender.tab,
+    streamId => {
       if (streamId) {
         msg.type = 'SS_DIALOG_SUCCESS';
         msg.streamId = streamId;
@@ -31,12 +33,13 @@ function requestScreenSharing(port, msg) {
         msg.type = 'SS_DIALOG_CANCEL';
       }
       port.postMessage(msg);
-    });
+    }
+  );
 }
 
 function cancelScreenSharing(msg) {
   if (desktopMediaRequestId) {
-     chrome.desktopCapture.cancelChooseDesktopMedia(desktopMediaRequestId);
+    chrome.desktopCapture.cancelChooseDesktopMedia(desktopMediaRequestId);
   }
 }
 
@@ -45,10 +48,10 @@ function flatten(arr) {
 }
 
 // This avoids a reload after an installation
-chrome.windows.getAll({ populate: true }, (windows) => {
+chrome.windows.getAll({ populate: true }, windows => {
   const details = { file: 'content-script.js', allFrames: true };
 
-  flatten(windows.map(w => w.tabs)).forEach((tab) => {
+  flatten(windows.map(w => w.tabs)).forEach(tab => {
     // Skip chrome:// pages
     if (tab.url.match(/(chrome):\/\//gi)) {
       return;

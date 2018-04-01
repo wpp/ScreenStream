@@ -18,24 +18,28 @@ window.contentScriptHasRun = false;
   window.contentScriptHasRun = true;
 
   const port = chrome.runtime.connect(chrome.runtime.id);
-  port.onMessage.addListener((msg) => {
-  	window.postMessage(msg, '*');
+  port.onMessage.addListener(msg => {
+    window.postMessage(msg, '*');
   });
 
-  window.addEventListener('message', (event) => {
-  	// Only accept messages from ourselves
-  	if (event.source !== window) {
-      return;
-    }
-    // Only accept events with a data type
-    if (!event.data.type) {
-      return ;
-    }
+  window.addEventListener(
+    'message',
+    event => {
+      // Only accept messages from ourselves
+      if (event.source !== window) {
+        return;
+      }
+      // Only accept events with a data type
+      if (!event.data.type) {
+        return;
+      }
 
-  	if (['SS_UI_REQUEST', 'SS_UI_CANCEL'].includes(event.data.type)) {
-  		port.postMessage(event.data);
-  	}
-  }, false);
+      if (['SS_UI_REQUEST', 'SS_UI_CANCEL'].includes(event.data.type)) {
+        port.postMessage(event.data);
+      }
+    },
+    false
+  );
 
   window.postMessage({ type: 'SS_PING', text: 'start' }, '*');
 })();
