@@ -111,9 +111,9 @@ because...
 the **content-script has access to the DOM.**
 
     window.addEventListener('message', event => {
-        if (event.data.type && ((event.data.type === 'SS_UI_REQUEST'))) {
-            port.postMessage(event.data);
-        }
+      if (event.data.type === 'SS_UI_REQUEST') {
+        port.postMessage(event.data);
+      }
     }, false);
 
 the content-script can also **talk to the background page**
@@ -133,7 +133,7 @@ chromeMediaSourceId (`streamID`) back to the port** (the content-script)
     function requestScreenSharing(port, msg) {
       desktopMediaRequestId =
       chrome.desktopCapture.chooseDesktopMedia(data_sources, port.sender.tab,
-      function (streamId) {
+      streamId => {
         msg.type = 'SS_DIALOG_SUCCESS';
         msg.streamId = streamId;
         port.postMessage(msg);
@@ -153,21 +153,20 @@ where we finally call `navigator.mediaDevices.getUserMedia` with the `streamID`
     }
 
     function startScreenStreamFrom(streamId) {
-      navigator.mediaDevices.getUserMedia({
-        video: {
-          mandatory: {
-            chromeMediaSource: 'desktop',
-            chromeMediaSourceId: streamId,
-            // ...
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: false,
+          video: {
+            mandatory: {
+              chromeMediaSource: 'desktop',
+              chromeMediaSourceId: streamId
+            }
           }
-        }
-      },
-      // successCallback
-      function(screenStream) {
-        videoElement = document.getElementById('video');
-        videoElement.src = URL.createObjectURL(screenStream);
-        videoElement.play();
-      }
+        })
+        .then(stream => {
+          videoElement = document.getElementById('video');
+          videoElement.srcObject = stream;
+        })
 
 *Please note that the code examples in this README are edited for brevity,
 complete code is in the corresponding files.*
