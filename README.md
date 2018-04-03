@@ -10,7 +10,7 @@ there.](https://github.com/webrtc/samples/tree/master/src/content/extensions/des
 (If you're writing a WebRTC app with screen sharing, and want to avoid sending
 users to `chrome://flags`)
 
-<img src="images/3.gif">
+<img src="images/preview.gif">
 
 ## Index
 
@@ -32,7 +32,7 @@ For the Demo to work, you will need to install the extension
 3. Click "Load unpacked extension..."
 4. In the dialog choose the `extension` folder from the repository
 
-You should see: <img src="images/2.png">
+You should see: <img src="images/extensions.png">
 
 NOTE: your ID will differ, that's fine though.
 
