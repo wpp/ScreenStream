@@ -1,8 +1,27 @@
-## Note
+## Notes
+
+### You might not need this anymore!
+
+Recent Chrome versions (70 and up) [introduced
+`getDisplayMedia`](https://groups.google.com/forum/?__s=seqnqtrfky2js3hsisxx#!msg/discuss-webrtc/Uf0SrR4uxzk/uO8sLrWuEAAJ)
+which essentially nullify this project and the need for an extension. You can
+simply acquire a screen stream with something like this:
+
+```js
+navigator.mediaDevices.getDisplayMedia({ audio: false, video: true })
+  .then(stream => video.srcObject = stream)
+  .catch(handleError);
+```
+
+A working demo can be found
+[here](https://cdn.rawgit.com/uysalere/js-demos/master/getdisplaymedia.html).
+
 
 *This project has been merged into https://github.com/GoogleChrome/webrtc in
 case something doesn't work have [a look over
 there.](https://github.com/webrtc/samples/tree/master/src/content/extensions/desktopcapture)*
+
+## Introduction
 
 *This demo app shows you how to use a Chrome extension to access the
 `desktopCapture` API in your web-application.*
